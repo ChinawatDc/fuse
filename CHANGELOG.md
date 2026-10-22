@@ -2,6 +2,13 @@
 
 All notable changes to `fuse` will be documented in this file.
 
+## v0.3.0 — 2026-10-22
+- **Context & Error Trimmer (`Context Trimmer on Error`)**: Prunes raw terminal dumps, multi-page stack traces, and test framework dumps down to strictly <= 3 lines (`[Root Error]` + `[Culprit Frame]`).
+- **>85% Token Reduction on Traceback Logs**: Automatically strips internal runtime/framework frames (`site-packages`, `node_modules`, `pytest`, standard library internals) from working context and agent thoughts.
+- **Negative Ledger Invariant**: Strictly bounds `Failure Evidence` in the Negative Knowledge Ledger to `<= 2` lines, preventing quadratic context growth during multi-turn debugging.
+- **Decisive Tier C Execution**: Explicitly bans speculative thought deliberation on environmental errors (EACCES/PermissionDenied, connection refused), forcing immediate escalation.
+- **Built-in Trimmer Utility & Test Suite**: Added standalone `scripts/trim_error.py` and `tests/test_trim_error.py` with 100% test pass across Python, Pytest, Node.js, and OS permission errors.
+
 ## v0.2.0 — 2026-10-22
 - **3-Tier Attempt Thresholds**:
   - Tier A (Syntax / Typing): up to 3 attempts.

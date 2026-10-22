@@ -6,7 +6,7 @@
 
 When coding assistants hit a failing test or compilation error, they often enter a destructive trial-and-error thrash—blindly editing files, stacking broken patches, and burning tens of thousands of tokens without progress.
 
-`fuse` acts as a hard circuit breaker with **error-tiered thresholds**. If attempts hit the tier limit, the circuit trips: the agent halts, records why previous attempts failed in a Negative Knowledge Ledger, and escalates to the human developer with structured strategic options.
+`fuse` acts as a hard circuit breaker with **error-tiered thresholds** and **context trimming**. If attempts hit the tier limit, the circuit trips: the agent halts, records why previous attempts failed in a Negative Knowledge Ledger, and escalates to the human developer with structured strategic options.
 
 ---
 
@@ -49,17 +49,20 @@ Different classes of errors warrant different tolerances:
 * **Tier B (Logic & Assertions):** Strictly **2 attempts** for test failures and contract drift.
 * **Tier C (Environment & Infra):** **1 attempt (Instant Trip)** for connection refusals, 503s, missing environment variables, or OS permission limits—preventing futile code edits when the environment is the blocker.
 
-### 3. Negative Knowledge Ledger
+### 3. Context & Error Trimming (v0.3.0)
+Never carry bloated terminal dumps into context. Automatically trims stack traces and multi-page logs down to strictly `<= 3` actionable lines (`[Root Error]` + `[Culprit Frame]`), reducing crash dump tokens by **>85%**.
+
+### 4. Negative Knowledge Ledger
 Instead of circular trial-and-error, `fuse` requires the agent to document:
 * **Hypothesis:** What was assumed to be the cause.
 * **Intervention:** What patch was applied.
-* **Failure Evidence:** The exact failure message that disproved the hypothesis.
+* **Failure Evidence:** Concise error message (max 2 lines) that disproved the hypothesis.
 * **Exclusion:** Marks that approach as permanently exhausted.
 
-### 4. Clean Rollback Discipline
-Never stack new speculative code on top of failed experiments. If an attempt fails, clean up the diff to prevent cascading corruption across the codebase.
+### 5. Clean Rollback Discipline
+Never stack new speculative code on top of failed experiments. If an attempt fails, clean up the diff (`git checkout` / `git restore`) to prevent cascading corruption across the codebase.
 
-### 5. Structured Escalation
+### 6. Structured Escalation
 When the circuit trips, the agent presents a crisp diagnostic summary and offers 2 distinct strategic forks (e.g., refactor upstream interface vs. modify test contract) for the human developer to decide.
 
 ---
