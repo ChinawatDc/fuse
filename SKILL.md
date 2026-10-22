@@ -1,11 +1,11 @@
 ---
 name: fuse
-version: v0.3.0
-description: Circuit breaker for AI coding agents. Prevents trial-and-error looping, stops runaway token consumption, trims error dumps to root causes, and enforces structured escalation after failed attempts.
+version: v0.4.0
+description: Circuit breaker for AI coding agents. Prevents trial-and-error looping, stops runaway token consumption, trims error dumps to root causes, and enforces clean auto-rollback and structured escalation after failed attempts.
 ---
-# fuse (v0.3.0)
+# fuse (v0.4.0)
 
-Circuit breaker for AI coding agents. Detects repetitive failure cycles, stops blind trial-and-error, prunes error context to root causes, and preserves context.
+Circuit breaker for AI coding agents. Detects repetitive failure cycles, stops blind trial-and-error, prunes error context to root causes, enforces clean auto-rollback, and preserves context.
 
 ## 0. Dynamic Activation (Zero-Overhead on Happy Path)
 - **Dormant Mode**: During routine development and passing tests, remain completely silent with zero prompt overhead.
@@ -60,8 +60,9 @@ Next Strategic Forks:
 Decision Required: Which direction should we pursue?
 ```
 
-## 5. Cascading Damage Prevention & Rollback
-- **Rollback Discipline**: If a failed attempt modified files or caused secondary failures, roll back immediately (`git checkout` / `git restore`) to the clean baseline. Never stack speculative patches on broken state.
+## 5. Auto-Rollback Discipline & Cascading Damage Prevention
+- **Auto-Rollback on Trip**: When the circuit trips, the agent MUST immediately discard unverified speculative changes (`git restore .` or restoring touched files) before emitting the escalation report. Leaving half-baked patches in working tree is prohibited.
+- **Attempt Cleanliness**: If a failed attempt modified files or caused secondary failures, roll back immediately to the clean baseline before attempting hypothesis 2. Never stack speculative patches on broken state.
 - **Log Pruning**: Drop all verbose terminal logs from failed runs; carry only the compact Negative Knowledge Ledger.
 
 ## 6. False-Green Guard (Root-Cause Verification)

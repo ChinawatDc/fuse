@@ -2,6 +2,11 @@
 
 All notable changes to `fuse` will be documented in this file.
 
+## v0.4.0 — 2026-10-22
+- **Empirical Benchmark Results in README**: Published the complete benchmark matrix comparing baseline (`none`) against `fuse` across circular dependencies, contract drift, permissions, and external outages.
+- **Auto-Rollback Discipline Codified**: Mandates executing `git restore .` upon circuit trip or before new hypotheses to prevent half-baked speculative code from corrupting working trees.
+- **Context Trimming Efficiency Metrics**: Documented real-world >80% token reduction across Python, Pytest, Node.js, and OS error traces.
+
 ## v0.3.0 — 2026-10-22
 - **Context & Error Trimmer (`Context Trimmer on Error`)**: Prunes raw terminal dumps, multi-page stack traces, and test framework dumps down to strictly <= 3 lines (`[Root Error]` + `[Culprit Frame]`).
 - **>85% Token Reduction on Traceback Logs**: Automatically strips internal runtime/framework frames (`site-packages`, `node_modules`, `pytest`, standard library internals) from working context and agent thoughts.
